@@ -11,11 +11,11 @@ public class Main{
 
             System.out.println(myPerson.getName() + " is " + myPerson.getAge() + " years old, and " + myPerson.printStatus());
             System.out.println(myScoreConverter.scoreToGrade(input));
-            System.err.println(mySimpleCalculator.calculate(input));
+            System.out.println(mySimpleCalculator.calculate(input));
 
             System.out.println("Btw, the weather outside looks ... ");
 
-            System.err.println("\n" + myTemperatureConverter.convertTemperature(input));
+            System.out.println("\n" + myTemperatureConverter.convertTemperature(input));
 
             System.out.println("\nYou have a bank account with us, with a value of: " + myBank.getCredit());
 
