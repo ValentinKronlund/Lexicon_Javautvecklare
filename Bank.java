@@ -35,13 +35,13 @@ public class Bank {
     public boolean  transaction(Scanner input){
         Helpers helper = new Helpers();
         while(true){
-            String type = helper.askLine(input,"What would you like to do, a 'Withdrawal' or a 'Deposit'?" );
+            String type = helper.askLine(input,"What would you like to do, a 'Withdrawal' or a 'Deposit'? " );
 
             if(!correctTransactionType(type)){
                 System.err.println("Invalid transaction type -- We only support 'Withdraw', or 'Deposit' ");
                 continue;
             }
-            
+
             double value = helper.askDobule(input, "What amount? ");
 
             switch (type) {

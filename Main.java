@@ -18,11 +18,8 @@ public class Main{
             System.out.println("\n" + myTemperatureConverter.convertTemperature(input));
 
             System.out.println("\nYou have a bank account with us, with a value of: " + myBank.getCredit());
-
-            while(true){
-                boolean isTransactionCompleted = myBank.transaction(input);
-                if(isTransactionCompleted) return;
-            }
+            myBank.transaction(input);
+               
 
         }
 
