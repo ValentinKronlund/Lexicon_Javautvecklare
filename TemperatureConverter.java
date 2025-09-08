@@ -1,0 +1,38 @@
+import java.text.DecimalFormat;
+
+public class TemperatureConverter {
+    private double temperatureInCelsius;
+    private double temperatureInFahrenheit;
+
+    public String ConvertTemperature(char FromTempFormat, double temperature){
+        DecimalFormat df = new DecimalFormat("0.00");
+        
+        while (true) { 
+            switch (FromTempFormat) {
+                case 'C', 'c': {
+                    this.temperatureInCelsius = temperature;
+                    this.temperatureInFahrenheit = (temperature * 9/5) + 32;
+                    return "Temperaturen är: " + df.format(this.temperatureInFahrenheit) + "°F rekommendationen för kläder är: " + this.RecommendedClothes();
+                }
+                case 'F', 'f': {
+                    this.temperatureInFahrenheit = temperature;
+                    this.temperatureInCelsius = (temperature - 32) * 5/9;
+                    return "Temperaturen är: " + df.format(this.temperatureInCelsius) + "°C rekommendationen för kläder är: " + this.RecommendedClothes();
+                }
+                default: System.out.println("Invalid input -- Only 'C' and 'F' are available. Try again! ");
+            }
+        }
+    };
+
+
+    private String RecommendedClothes(){
+        if(this.temperatureInCelsius < 0){return "\nMycket kallt - ta på dig vinterkläder!";}
+        if(this.temperatureInCelsius >= 0 && this.temperatureInCelsius <= 10){return "\nKallt - jacka behövs!";}
+        if(this.temperatureInCelsius >= 11 && this.temperatureInCelsius <= 20){return "\nSvalt - Ta med en lätt jacka, utifall att!";}
+        if(this.temperatureInCelsius >= 21 && this.temperatureInCelsius <= 30){return "\nJävligt nice - På med solbrillorna fö' fan!";}
+        if(this.temperatureInCelsius > 30){return "\nWait a minut - Sun, stahp!!";}
+
+        return "Something went wrong tbh";
+    }
+
+}

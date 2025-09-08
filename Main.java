@@ -28,11 +28,21 @@ public class Main{
             Person myPerson = new Person(name, age);
             ScoreConverter myScoreConverter = new ScoreConverter();
             SimpleCalculator mySimpleCalculator = new SimpleCalculator();
+            TemperatureConverter myTemperatureConverter = new TemperatureConverter();
 
             System.out.println(myPerson.getName() + " is " + myPerson.getAge() + " years old, and " + myPerson.PrintStatus());
             System.out.println(myScoreConverter.ScoreToGrade(score));
             System.err.println(mySimpleCalculator.Calculate(operation, value1, value2));
+
+            System.out.println("Btw, the weather outside looks ... ");
+
+            char tempFormat = askChar(input, "What temperature are you converting from? ");
+            double temperature = askDobule(input, "And how warm is it outside? ");
+
+            System.err.println(myTemperatureConverter.ConvertTemperature(tempFormat, temperature));
         }
+
+        
 
     }
 
@@ -60,6 +70,11 @@ public class Main{
             catch (NumberFormatException e) {System.out.println("Please enter a number!");}
             
         }
+    }
+
+    static char askChar(Scanner input, String prompt){
+        System.err.println(prompt);
+        return input.nextLine().trim().charAt(0);
     }
 
 }
