@@ -1,26 +1,29 @@
 public class Main{
     public static void main(String[] args) {
-        byte xByte = 1;
-        short xShort = 2;
-        int x = 5;
-        long xLong = 50L;
+        // byte xByte = 1;
+        // short xShort = 2;
+        // int x = 5;
+        // long xLong = 50L;
 
-        float xFloat = 5.0f;
-        double xDouble = 10.0;
+        // float xFloat = 5.0f;
+        // double xDouble = 10.0;
 
-        char xChar = 'a';
-        boolean xBool = true;
+        // char xChar = 'a';
+        // boolean xBool = true;
 
-        String text = "hej";
+        // String text = "hej";
 
-        int index = 0;
-        while(index != 9){
-            Greeting greeting = new Greeting();
-            System.out.println(index);
-            greeting.getGreeting(index);
-            double num = Math.floor(Math.random() * 10);
-            index = (int) Math.abs(num);
-        }
+        // int index = 0;
+
+        // while(index != 9){
+        //     Greeting greeting = new Greeting();
+        //     System.out.println(index);
+        //     greeting.getGreeting(index);
+        //     double num = Math.floor(Math.random() * 10);
+        //     index = (int) Math.abs(num);
+        // }
+
+        
 
     }
 }
