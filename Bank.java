@@ -2,8 +2,6 @@
 import java.util.Scanner;
 
 public class Bank {
-    Helpers helper = new Helpers();
-
     private double credit = 0.0;
     public double getCredit(){return this.credit;}
     private boolean depositCredit(double value){
@@ -35,6 +33,7 @@ public class Bank {
     }
 
     public boolean  transaction(Scanner input){
+        Helpers helper = new Helpers();
         String type = helper.askLine(input,"What would you like to do, a 'Withdrawal' or a 'Deposit'?" );
         double value = helper.askDobule(input, "What amount? ");
 

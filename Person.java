@@ -1,18 +1,26 @@
+
+import java.util.Scanner;
+
 public class Person {
     private int age;
     private String name;
     private String status;
 
-    public Person(String name, int age){
-        this.name = java.util.Objects.requireNonNull(name);
-        if (age < 0) throw new Error();
+    public Person(Scanner input){
+        Helpers helper = new Helpers();
 
-        this.age = age;
+        String inputName = helper.askLine(input, "What's your name? ");
+        int inputAge = helper.askInt(input, "How old are you? ");
 
-        if(age < 13){this.status = "Barn";}
-        else if(age >= 13 && age <= 19){this.status = "Tonåring";}
-        else if(age >= 20 && age <= 64){this.status = "Vuxen";}
-        else if(age >= 65 && age < 95){this.status = "Senior";}
+        this.name = java.util.Objects.requireNonNull(inputName);
+        if (inputAge < 0) throw new Error();
+
+        this.age = inputAge;
+
+        if(inputAge < 13){this.status = "Barn";}
+        else if(inputAge >= 13 && inputAge <= 19){this.status = "Tonåring";}
+        else if(inputAge >= 20 && inputAge <= 64){this.status = "Vuxen";}
+        else if(inputAge >= 65 && inputAge < 95){this.status = "Senior";}
         else {this.status = "Död ... förmodligen";}
     };
 
