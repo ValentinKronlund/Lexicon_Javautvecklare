@@ -2,20 +2,6 @@ import java.util.Scanner;
 
 public class Main{
     public static void main(String[] args) {
-        // byte xByte = 1;
-        // short xShort = 2;
-        // int x = 5;
-        // long xLong = 50L;
-
-        // float xFloat = 5.0f;
-        // double xDouble = 10.0;
-
-        // char xChar = 'a';
-        // boolean xBool = true;
-
-        // String text = "hej";
-
-        // int index = 0;
 
         try (Scanner input = new Scanner(System.in)){
             String name = askLine(input, "What's your name? ");
@@ -29,6 +15,7 @@ public class Main{
             ScoreConverter myScoreConverter = new ScoreConverter();
             SimpleCalculator mySimpleCalculator = new SimpleCalculator();
             TemperatureConverter myTemperatureConverter = new TemperatureConverter();
+            Bank myBank = new Bank();
 
             System.out.println(myPerson.getName() + " is " + myPerson.getAge() + " years old, and " + myPerson.PrintStatus());
             System.out.println(myScoreConverter.ScoreToGrade(score));
@@ -39,7 +26,13 @@ public class Main{
             char tempFormat = askChar(input, "What temperature are you converting from? ");
             double temperature = askDobule(input, "And how warm is it outside? ");
 
-            System.err.println(myTemperatureConverter.ConvertTemperature(tempFormat, temperature));
+            System.err.println("\n" + myTemperatureConverter.ConvertTemperature(tempFormat, temperature));
+
+            System.out.println("\nYou have a bank account with us, with a value of: " + myBank.getCredit());
+            myBank.transaction(
+                askLine(input, "What would you like to do, a 'Withdrawal' or a 'Deposit'?"),
+                askInt(input, "What amount? "));
+
         }
 
         
