@@ -15,33 +15,11 @@ public class Main{
 
         // int index = 0;
 
-        // while(index != 9){
-        //     Greeting greeting = new Greeting();
-        //     System.out.println(index);
-        //     greeting.getGreeting(index);
-        //     double num = Math.floor(Math.random() * 10);
-        //     index = (int) Math.abs(num);
-        // }
 
-        
-
-    }
-}
-
-class Greeting{
-    public void getGreeting(int choice){
-        switch(choice){
-            case 0:{ System.out.println("Ska sova, hej hej!");break;}
-            case 1:{ System.out.println("Goddag!");break;}
-            case 2:{ System.out.println("Godeftermiddag!");break;}
-            case 3:{ System.out.println("Var hälsad!");break;}
-            case 4:{ System.out.println("En fröjd!");break;}
-            case 5:{ System.out.println("Go'kväll!");break;}
-            case 6:{ System.out.println("Din mamma!");break;}
-            case 7:{ System.out.println("Tja!");break;}
-            case 8:{ System.out.println("Mitt nöje!");break;}
-            default: System.out.println("Hej");
-        }
+        Person myPerson = new Person("Valentin", 300);
+        ScoreConverter myScoreConverter = new ScoreConverter();
+        System.out.println(myPerson.getName() + " is " + myPerson.getAge() + "years old, and " + myPerson.PrintStatus());
+        System.out.println(myScoreConverter.ScoreToGrade(87));
 
     }
 }

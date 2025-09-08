@@ -1,15 +1,11 @@
-public class EvaluateAge {
-    
-}
-
-class Person {
+public class Person {
     private int age;
     private String name;
     private String status;
 
     public Person(String name, int age){
         this.name = java.util.Objects.requireNonNull(name);
-        if (age < 0 || age > 110) throw new Error();
+        if (age < 0) throw new Error();
 
         this.age = age;
 
@@ -20,7 +16,10 @@ class Person {
         else {this.status = "Död ... förmodligen";}
     };
 
-    public String PrintAge(){
-        return "";
+    public String PrintStatus(){
+        return this.status;
     }
+
+    public String getName(){return this.name;}
+    public int getAge(){return this.age;}
 }
