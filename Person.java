@@ -16,7 +16,7 @@ public class Person {
         else {this.status = "Död ... förmodligen";}
     };
 
-    public String PrintStatus(){
+    public String printStatus(){
         return this.status;
     }
 

@@ -17,16 +17,16 @@ public class Main{
             TemperatureConverter myTemperatureConverter = new TemperatureConverter();
             Bank myBank = new Bank();
 
-            System.out.println(myPerson.getName() + " is " + myPerson.getAge() + " years old, and " + myPerson.PrintStatus());
-            System.out.println(myScoreConverter.ScoreToGrade(score));
-            System.err.println(mySimpleCalculator.Calculate(operation, value1, value2));
+            System.out.println(myPerson.getName() + " is " + myPerson.getAge() + " years old, and " + myPerson.printStatus());
+            System.out.println(myScoreConverter.scoreToGrade(score));
+            System.err.println(mySimpleCalculator.calculate(operation, value1, value2));
 
             System.out.println("Btw, the weather outside looks ... ");
 
             char tempFormat = askChar(input, "What temperature are you converting from? ");
             double temperature = askDobule(input, "And how warm is it outside? ");
 
-            System.err.println("\n" + myTemperatureConverter.ConvertTemperature(tempFormat, temperature));
+            System.err.println("\n" + myTemperatureConverter.convertTemperature(tempFormat, temperature));
 
             System.out.println("\nYou have a bank account with us, with a value of: " + myBank.getCredit());
             myBank.transaction(

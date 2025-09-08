@@ -1,5 +1,5 @@
 public class SimpleCalculator {
-    public double Calculate(String operation, double value_1, double value_2){
+    public double calculate(String operation, double value_1, double value_2){
         switch (operation) {
             case "+": {return value_1 + value_2;}
             case "-": {return value_1 - value_2;}

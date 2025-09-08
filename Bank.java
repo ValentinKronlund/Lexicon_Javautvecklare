@@ -1,5 +1,5 @@
 public class Bank {
-    private double credit;
+    private double credit = 0.0;
     public double getCredit(){return this.credit;}
     private void depositCredit(double value){
             if(value > 0) {

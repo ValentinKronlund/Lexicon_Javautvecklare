@@ -4,7 +4,7 @@ public class TemperatureConverter {
     private double temperatureInCelsius;
     private double temperatureInFahrenheit;
 
-    public String ConvertTemperature(char FromTempFormat, double temperature){
+    public String convertTemperature(char FromTempFormat, double temperature){
         DecimalFormat df = new DecimalFormat("0.00");
 
         while (true) { 
@@ -12,12 +12,12 @@ public class TemperatureConverter {
                 case 'C', 'c': {
                     this.temperatureInCelsius = temperature;
                     this.temperatureInFahrenheit = (temperature * 9/5) + 32;
-                    return "Temperaturen är: " +  df.format(this.temperatureInCelsius) + "°C och " + df.format(this.temperatureInFahrenheit) + "°F rekommendationen för kläder är: " + this.RecommendedClothes();
+                    return "Temperaturen är: " +  df.format(this.temperatureInCelsius) + "°C och " + df.format(this.temperatureInFahrenheit) + "°F rekommendationen för kläder är: " + this.recommendedClothes();
                 }
                 case 'F', 'f': {
                     this.temperatureInFahrenheit = temperature;
                     this.temperatureInCelsius = (temperature - 32) * 5/9;
-                    return "Temperaturen är: " +  df.format(this.temperatureInFahrenheit) + "°F och " + df.format(this.temperatureInCelsius) + "°C rekommendationen för kläder är: " + this.RecommendedClothes();
+                    return "Temperaturen är: " +  df.format(this.temperatureInFahrenheit) + "°F och " + df.format(this.temperatureInCelsius) + "°C rekommendationen för kläder är: " + this.recommendedClothes();
                 }
                 default: System.out.println("Invalid input -- Only 'C' and 'F' are available. Try again! ");
             }
@@ -25,7 +25,7 @@ public class TemperatureConverter {
     };
 
 
-    private String RecommendedClothes(){
+    private String recommendedClothes(){
         if(this.temperatureInCelsius < 0){return "\nMycket kallt - ta på dig vinterkläder!";}
         if(this.temperatureInCelsius >= 0 && this.temperatureInCelsius <= 10){return "\nKallt - jacka behövs!";}
         if(this.temperatureInCelsius >= 11 && this.temperatureInCelsius <= 20){return "\nSvalt - Ta med en lätt jacka, utifall att!";}
