@@ -6,18 +6,18 @@ public class TemperatureConverter {
 
     public String ConvertTemperature(char FromTempFormat, double temperature){
         DecimalFormat df = new DecimalFormat("0.00");
-        
+
         while (true) { 
             switch (FromTempFormat) {
                 case 'C', 'c': {
                     this.temperatureInCelsius = temperature;
                     this.temperatureInFahrenheit = (temperature * 9/5) + 32;
-                    return "Temperaturen är: " + df.format(this.temperatureInFahrenheit) + "°F rekommendationen för kläder är: " + this.RecommendedClothes();
+                    return "Temperaturen är: " +  df.format(this.temperatureInCelsius) + "°C och " + df.format(this.temperatureInFahrenheit) + "°F rekommendationen för kläder är: " + this.RecommendedClothes();
                 }
                 case 'F', 'f': {
                     this.temperatureInFahrenheit = temperature;
                     this.temperatureInCelsius = (temperature - 32) * 5/9;
-                    return "Temperaturen är: " + df.format(this.temperatureInCelsius) + "°C rekommendationen för kläder är: " + this.RecommendedClothes();
+                    return "Temperaturen är: " +  df.format(this.temperatureInFahrenheit) + "°F och " + df.format(this.temperatureInCelsius) + "°C rekommendationen för kläder är: " + this.RecommendedClothes();
                 }
                 default: System.out.println("Invalid input -- Only 'C' and 'F' are available. Try again! ");
             }
