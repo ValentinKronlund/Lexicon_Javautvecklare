@@ -34,22 +34,39 @@ public class Bank {
 
     public boolean  transaction(Scanner input){
         Helpers helper = new Helpers();
-        String type = helper.askLine(input,"What would you like to do, a 'Withdrawal' or a 'Deposit'?" );
-        double value = helper.askDobule(input, "What amount? ");
+        while(true){
+            String type = helper.askLine(input,"What would you like to do, a 'Withdrawal' or a 'Deposit'?" );
 
-        switch (type) {
-            case "Withdraw":
-            case "withdraw":
-            case "w":
-                return withdrawCredit(value);
-            case "Deposit":
-            case "deposit":
-            case "d":
-                return depositCredit(value);
-            default:
+            if(!correctTransactionType(type)){
                 System.err.println("Invalid transaction type -- We only support 'Withdraw', or 'Deposit' ");
-                return false;
+                continue;
+            }
+            
+            double value = helper.askDobule(input, "What amount? ");
+
+            switch (type) {
+                case "Withdraw":
+                case "withdraw":
+                case "w":
+                    return withdrawCredit(value);
+                case "Deposit":
+                case "deposit":
+                case "d":
+                    return depositCredit(value);
+                default:
+                    return false;
+            }
         }
         
+    }
+
+   private boolean correctTransactionType(String type){
+        return
+            type.equals("Withdraw") ||
+            type.equals("withdraw") ||
+            type.equals("w") ||
+            type.equals("Deposit") ||
+            type.equals("deposit") ||
+            type.equals("d");
     }
 }

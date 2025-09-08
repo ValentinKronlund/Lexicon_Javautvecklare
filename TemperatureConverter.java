@@ -11,6 +11,11 @@ public class TemperatureConverter {
         
         while (true) { 
             char FromTempFormat = helper.askChar(input, "What temperature format are you converting from, 'F' or 'C'? ");
+            if(!isCorrectTempFormat(FromTempFormat)){
+                System.out.println("Invalid input -- Only 'C' and 'F' are available. Try again! ");
+                continue;
+            }
+
             double temperature = helper.askDobule(input, "What temperature is it? ");
             switch (FromTempFormat) {
                 case 'C', 'c': {
@@ -23,7 +28,6 @@ public class TemperatureConverter {
                     this.temperatureInCelsius = (temperature - 32) * 5/9;
                     return "Temperaturen är: " +  df.format(this.temperatureInFahrenheit) + "°F och " + df.format(this.temperatureInCelsius) + "°C rekommendationen för kläder är: " + this.recommendedClothes();
                 }
-                default: System.out.println("Invalid input -- Only 'C' and 'F' are available. Try again! ");
             }
         }
     };
@@ -37,6 +41,14 @@ public class TemperatureConverter {
         if(this.temperatureInCelsius > 30){return "\nWait a minut - Sun, stahp!!";}
 
         return "Something went wrong tbh";
+    }
+
+    private boolean isCorrectTempFormat(char tempFormat){
+        return
+            tempFormat == 'C' ||
+            tempFormat == 'c' ||
+            tempFormat == 'F' ||
+            tempFormat == 'f';
     }
 
 }
