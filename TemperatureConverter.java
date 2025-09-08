@@ -1,13 +1,17 @@
 import java.text.DecimalFormat;
+import java.util.Scanner;
 
 public class TemperatureConverter {
     private double temperatureInCelsius;
     private double temperatureInFahrenheit;
 
-    public String convertTemperature(char FromTempFormat, double temperature){
+    public String convertTemperature(Scanner input){
+        Helpers helper = new Helpers();
         DecimalFormat df = new DecimalFormat("0.00");
-
+        
         while (true) { 
+            char FromTempFormat = helper.askChar(input, "What temperature format are you converting from, 'F' or 'C'? ");
+            double temperature = helper.askDobule(input, "What temperature is it? ");
             switch (FromTempFormat) {
                 case 'C', 'c': {
                     this.temperatureInCelsius = temperature;

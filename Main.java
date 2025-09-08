@@ -3,13 +3,15 @@ import java.util.Scanner;
 public class Main{
     public static void main(String[] args) {
 
+        Helpers helper = new Helpers();
+
         try (Scanner input = new Scanner(System.in)){
-            String name = askLine(input, "What's your name? ");
-            int age = askInt(input, "How old are you? ");
-            double score = askDobule(input, "What did you score on your last test? ");
-            String operation = askLine(input, "What operation would you like to run? ");
-            double value1 = askDobule(input, "What is the first value? ");
-            double value2 = askDobule(input, "What is the second value? ");
+            String name = helper.askLine(input, "What's your name? ");
+            int age = helper.askInt(input, "How old are you? ");
+            double score = helper.askDobule(input, "What did you score on your last test? ");
+            String operation = helper.askLine(input, "What operation would you like to run? ");
+            double value1 = helper.askDobule(input, "What is the first value? ");
+            double value2 = helper.askDobule(input, "What is the second value? ");
 
             Person myPerson = new Person(name, age);
             ScoreConverter myScoreConverter = new ScoreConverter();
@@ -23,49 +25,17 @@ public class Main{
 
             System.out.println("Btw, the weather outside looks ... ");
 
-            char tempFormat = askChar(input, "What temperature are you converting from? ");
-            double temperature = askDobule(input, "And how warm is it outside? ");
-
-            System.err.println("\n" + myTemperatureConverter.convertTemperature(tempFormat, temperature));
+            System.err.println("\n" + myTemperatureConverter.convertTemperature(input));
 
             System.out.println("\nYou have a bank account with us, with a value of: " + myBank.getCredit());
-            myBank.transaction(
-                askLine(input, "What would you like to do, a 'Withdrawal' or a 'Deposit'?"),
-                askInt(input, "What amount? "));
+
+            while(true){
+                boolean isTransactionCompleted = myBank.transaction(input);
+                if(isTransactionCompleted) return;
+            }
 
         }
 
-    }
-
-    /* ----- HELPERS! 👷🏽 ----- */
-    static String askLine(Scanner input, String prompt){
-        System.out.print(prompt);
-        return input.nextLine().trim();
-    }
-
-    static int askInt(Scanner input, String prompt){
-        while (true) { 
-            System.out.print(prompt);
-            String inputAsString = input.nextLine().trim();
-            try {return Integer.parseInt(inputAsString);}
-            catch (NumberFormatException e) {System.out.println("Please enter a whole number!");}
-            
-        }
-    }
-
-    static double askDobule(Scanner input, String prompt){
-         while (true) { 
-            System.out.print(prompt);
-            String inputAsString = input.nextLine().trim().replace(',', '.');
-            try {return Double.parseDouble(inputAsString);}
-            catch (NumberFormatException e) {System.out.println("Please enter a number!");}
-            
-        }
-    }
-
-    static char askChar(Scanner input, String prompt){
-        System.err.println(prompt);
-        return input.nextLine().trim().charAt(0);
     }
 
 }
