@@ -4,7 +4,16 @@ public class Helpers {
     /* ----- HELPERS! 👷🏽 ----- */
     public String askLine(Scanner input, String prompt){
         System.out.print(prompt);
-        return input.nextLine().trim();
+        while (true) { 
+            String correctInput = input.nextLine().trim();
+
+            if(correctInput != null && !correctInput.isEmpty()){
+                return correctInput;
+            }
+            else {
+                System.out.println("⚠️ Please enter a correct input value, don't leave it blank! ⚠️");
+            }
+        }
     }
 
     public int askInt(Scanner input, String prompt){
@@ -12,7 +21,7 @@ public class Helpers {
             System.out.print(prompt);
             String inputAsString = input.nextLine().trim();
             try {return Integer.parseInt(inputAsString);}
-            catch (NumberFormatException e) {System.out.println("Please enter a whole number!");}
+            catch (NumberFormatException e) {System.out.println("⚠️ Please enter a whole number! ⚠️");}
             
         }
     }
