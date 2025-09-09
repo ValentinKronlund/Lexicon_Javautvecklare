@@ -8,6 +8,7 @@ public class LiarsDice {
     private int[][] allPlayerDice;
     private int[][] allPlayerGuesses;
     private Helpers helper = new Helpers();
+    private GameHelpers gameHelpers = new GameHelpers();
 
 
     public void InitiateGame(Scanner input){
@@ -45,7 +46,7 @@ public class LiarsDice {
 
             System.out.println("\nSum fine guesses have been made! ");
 
-            int currentLeader = compareGuesses(allPlayerGuesses);
+            int currentLeader = gameHelpers.compareGuesses(allPlayerGuesses);
 
             System.out.println(players[currentLeader].name + " is the current leader! He's betting " + Arrays.toString(allPlayerGuesses[currentLeader]));
 
@@ -71,7 +72,7 @@ public class LiarsDice {
                 }
             }
 
-            boolean didHeLie = isPlayerALiar(players[currentLeader].dice, allPlayerGuesses[currentLeader]);
+            boolean didHeLie = gameHelpers.isPlayerALiar(players[currentLeader].dice, allPlayerGuesses[currentLeader]);
 
             if(isLeaderALiar == didHeLie){
                 System.out.println("\nBahaha, looks like you caught " + players[currentLeader].name + " in his lie!");
@@ -92,39 +93,6 @@ public class LiarsDice {
         }
     }
 
-    public int compareGuesses(int[][] guesses){
-        int bestIndex = 0;
-        for(int i = 1; i < guesses.length; i++){
-            int[] currentGuess = guesses[i];
-            int[] bestGuess = guesses[bestIndex];
-
-            if(currentGuess[0] > bestGuess[0]){
-                bestIndex = i;
-            }
-            else if(currentGuess[0] == bestGuess[0] && currentGuess[1] > bestGuess[1]){
-                bestIndex = i;
-            }
-
-        }
-           
-        return bestIndex;
-    }
-
-    
-    public boolean isPlayerALiar(int[] playerDice, int[] playerGuess){
-        int diceCountNeeded = playerGuess[0];
-        int faceValue = playerGuess[1];
-
-        int actualDiceCount = 0;
-        for(int d : playerDice){
-            if(d == faceValue){
-                actualDiceCount++;
-            }
-        }
-
-
-        return diceCountNeeded == actualDiceCount;
-    }
 }
 
 
