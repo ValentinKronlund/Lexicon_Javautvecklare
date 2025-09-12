@@ -3,7 +3,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Player {
-    String name;
+    public String name;
     int[] dice;
     boolean isWinner = false;
     private Helpers helper = new Helpers();
