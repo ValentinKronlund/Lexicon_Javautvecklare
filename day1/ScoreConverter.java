@@ -1,4 +1,8 @@
+package day1;
+
 import java.util.Scanner;
+import helpers.Helpers;
+
 
 public class ScoreConverter {
     public char scoreToGrade(Scanner input){

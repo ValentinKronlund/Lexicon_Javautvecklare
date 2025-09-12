@@ -1,5 +1,9 @@
+package day2;
 import java.util.Arrays;
 import java.util.Scanner;
+
+import helpers.GameHelpers;
+import helpers.Helpers;
 
 public class LiarsDice {
     boolean gameInProgress = false;

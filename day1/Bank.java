@@ -1,4 +1,7 @@
+package day1;
+
 import java.util.Scanner;
+import helpers.Helpers;
 
 public class Bank {
     private double credit = 0.0;

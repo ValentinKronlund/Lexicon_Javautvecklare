@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import day3.Student;
+
 public class Main{
     public static void main(String[] args) {
          String[] names = {

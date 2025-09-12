@@ -1,6 +1,9 @@
+package day2;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+
+import helpers.Helpers;
 
 public class Player {
     public String name;

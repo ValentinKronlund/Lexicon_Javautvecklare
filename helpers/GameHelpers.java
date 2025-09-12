@@ -1,3 +1,5 @@
+package helpers;
+import day2.Player;
 import java.util.Scanner;
 
 public class GameHelpers {
