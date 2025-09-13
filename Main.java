@@ -1,9 +1,10 @@
-import summonersTerminal.SummonersTerminalGame;
+import summonersTerminal.SummonersTerminal;
 
 public class Main {
     public static void main(String[] args) {
-        SummonersTerminalGame game = new SummonersTerminalGame();
+        SummonersTerminal game = new SummonersTerminal();
         game.PlayGame();
+        return;
     }
 
 }

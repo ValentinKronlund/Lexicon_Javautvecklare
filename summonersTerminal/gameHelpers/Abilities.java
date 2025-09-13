@@ -24,20 +24,19 @@ public class Abilities {
                 }
 
                 System.out.println("\nGaren used 'Judgment' for " + manaCost + " mana");
+                champion.useMana(manaCost);
                 int aoeStart = Math.max(0, targetIdx - 2);
                 int aoeEnd = Math.min(minionWave.size() - 1, targetIdx + 2);
-
-                champion.useMana(manaCost);
+                List<Minion> aoeTargets = new ArrayList<>(minionWave.subList(aoeStart, aoeEnd + 1));
 
                 int hits = 0;
-                for (int i = aoeStart; i <= aoeEnd; i++) {
-                    Minion aoeTarget = minionWave.get(i);
-                    if (aoeTarget == null)
+                for (Minion minion : aoeTargets) {
+                    if (minion == null) {
                         continue;
-                    aoeTarget.takeDamage(damage, minionWave, champion);
+                    }
+                    minion.takeDamage(damage, minionWave, champion);
                     hits++;
                 }
-
                 return hits > 0;
             }
 

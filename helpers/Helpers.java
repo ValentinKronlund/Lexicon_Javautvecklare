@@ -1,9 +1,10 @@
 package helpers;
 
-import day3.Student;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+
+import day3.Student;
 
 public class Helpers {
     /* ----- HELPERS! 👷🏽 ----- */
@@ -47,8 +48,14 @@ public class Helpers {
     }
 
     public char askChar(Scanner input, String prompt) {
-        System.err.println(prompt);
-        return input.nextLine().trim().charAt(0);
+        try {
+            System.out.println(prompt);
+            return input.nextLine().trim().charAt(0);
+
+        } catch (Exception e) {
+            System.out.println(prompt);
+            return '.';
+        }
     }
 
     public void sortByScore(List<Student> students, boolean ascending) {

@@ -8,30 +8,27 @@ import helpers.Helpers;
 import summonersTerminal.gameHelpers.Action;
 import summonersTerminal.gameHelpers.Copy;
 
-public class SummonersTerminalGame {
+public class SummonersTerminal {
     Scanner scanner = new Scanner(System.in);
     Helpers helper = new Helpers();
 
-    public boolean gameInProgress;
+    private boolean winConditionMet = false;
     private Champion playerChampion;
     private Champion enemyChampion;
+    private Nexus nexus = new Nexus("Enemy Nexus");
     private List<Minion> minionWave = new ArrayList<>();
     private int waveNumber = 1;
 
     public boolean PlayGame() {
-        this.gameInProgress = InitiateGame();
-        if (gameInProgress) {
-            GameLoop();
-        }
-
+        InitiateGame();
+        GameLoop();
         return true;
     }
 
-    private boolean InitiateGame() {
+    private void InitiateGame() {
         Copy.initialCopy();
 
         while (playerChampion == null) {
-
             try {
                 String championRequest = helper.askLine(scanner, "");
 
@@ -62,11 +59,11 @@ public class SummonersTerminalGame {
         this.enemyChampion = new Champion("Lux", ChampionClass.MAGE);
 
         Copy.championsSelectedCopy(playerChampion, enemyChampion);
-        return true;
     }
 
     private boolean GameLoop() {
-        while (true) {
+        while (!winConditionMet) {
+            System.out.println("WIN CONDITION MET: " + winConditionMet);
             if (playerChampion.getIsDead() == true) {
                 playerChampion.respawn();
             }
@@ -94,7 +91,7 @@ public class SummonersTerminalGame {
                         }
 
                         case 'm': {
-                            Action.attackAction(playerChampion, minionWave);
+                            Action.attackAction(playerChampion, minionWave, nexus);
                             playerActionCount++;
                             break;
                         }
@@ -106,10 +103,7 @@ public class SummonersTerminalGame {
                         }
 
                         case 'i': {
-                            System.out.println("\n[1] " + Item.THORN_MAIL.toString() +
-                                    "\n[2] " + Item.ROD_OF_AGES.toString() +
-                                    "\n[3] " + Item.INFINITY_EDGE.toString() +
-                                    "\n[4] " + Item.RABADONS_DEATHCAP.toString());
+                            Copy.viewItemsCopy();
                             continue; // <----- Continue here as to not lose a round or take damage.
                         }
                         case 'p': {
@@ -157,6 +151,11 @@ public class SummonersTerminalGame {
                     continue;
                 }
 
+                if (nexus.isDestroyed) {
+                    endGame();
+                    return true;
+                }
+
                 if (playerChampion.getInBase() == false) {
                     for (Minion minion : minionWave) {
                         playerChampion.takeDamage(minion.attack(), playerActionCount);
@@ -168,6 +167,13 @@ public class SummonersTerminalGame {
             waveNumber++;
 
         }
+
+        return true; // <--- Fallback condition, should never be run
+    }
+
+    private void endGame() {
+        Copy.victoryCopy();
+        this.winConditionMet = true;
     }
 
 }

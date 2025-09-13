@@ -1,13 +1,15 @@
 package summonersTerminal.gameHelpers;
 
-import helpers.Helpers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import helpers.Helpers;
 import summonersTerminal.Champion;
 import summonersTerminal.Item;
 import summonersTerminal.Minion;
 import summonersTerminal.MinionType;
+import summonersTerminal.Nexus;
 
 public class Action {
     static Helpers helper = new Helpers();
@@ -35,22 +37,28 @@ public class Action {
         }
     }
 
-    public static boolean attackAction(Champion playerChampion, List<Minion> minionWave) {
+    public static boolean attackAction(Champion playerChampion, List<Minion> minionWave, Nexus nexus) {
         while (true) {
-            Copy.attackActionChoiceCopy(minionWave);
-            int targetIdx = helper.askInt(scanner, "");
-            try {
-                if (minionWave.get(targetIdx - 1) == null) {
+            if (minionWave.size() > 0) {
+                Copy.attackActionChoiceCopy(minionWave);
+                int targetIdx = helper.askInt(scanner, "");
+                try {
+                    if (minionWave.get(targetIdx - 1) == null) {
+                        System.out.println("No minion at given index: " + targetIdx);
+                        continue;
+                    }
+
+                    Minion targetMinion = minionWave.get(targetIdx - 1);
+                    boolean successfulAttack = playerChampion.attack(targetMinion, minionWave);
+                    return successfulAttack;
+                } catch (IllegalArgumentException e) {
                     System.out.println("No minion at given index: " + targetIdx);
                     continue;
                 }
-
-                Minion targetMinion = minionWave.get(targetIdx - 1);
-                boolean successfulAttack = playerChampion.attack(targetMinion, minionWave);
-                return successfulAttack;
-            } catch (IllegalArgumentException e) {
-                System.out.println("No minion at given index: " + targetIdx);
-                continue;
+            } else {
+                Copy.attackNexusCopy(nexus);
+                playerChampion.attackNexus(nexus);
+                return true;
             }
         }
     }

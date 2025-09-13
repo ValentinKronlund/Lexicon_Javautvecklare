@@ -12,7 +12,7 @@ public class Champion {
     ChampionClass championClass;
     private Stats stats;
     private int level = 1;
-    private int gold = 500;
+    private int gold = 50000;
     private boolean isDead = false;
     private boolean inBase = false;
 
@@ -71,7 +71,9 @@ public class Champion {
             return false;
         }
         this.gold -= item.cost();
-        items.add(item);
+        for (int i = 0; i <= 3; i++) {
+            items.add(item);
+        }
         System.out.println("\nYou purchased " + item.toString() + "\n");
         return goToBase();
     }
@@ -89,6 +91,10 @@ public class Champion {
 
     public boolean attack(Minion target, List<Minion> minionWave) {
         return target.takeDamage(this.stats.attackPower(), minionWave, this);
+    }
+
+    public boolean attackNexus(Nexus nexus) {
+        return nexus.takeDamage(this.stats.attackPower());
     }
 
     public boolean ability(Minion target, List<Minion> minionWave) {
@@ -194,7 +200,7 @@ public class Champion {
                 ? "(none)"
                 : items.stream()
                         .map(Item::toString)
-                        .collect(Collectors.joining(", "));
+                        .collect(Collectors.joining("\n"));
 
         return "[%s] - (Lv.%d %s)\n%s\nGold: %d\nItems: %s ".formatted(championName, level, championClass, stats, gold,
                 itemsString);

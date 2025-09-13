@@ -3,7 +3,9 @@ package summonersTerminal.gameHelpers;
 import java.util.List;
 
 import summonersTerminal.Champion;
+import summonersTerminal.Item;
 import summonersTerminal.Minion;
+import summonersTerminal.Nexus;
 
 public class Copy {
 
@@ -72,5 +74,35 @@ public class Copy {
         }
         System.out.println("🗡️ 🗡️ 🗡️ 🗡️ 🗡️");
 
+    }
+
+    public static void attackNexusCopy(Nexus nexus) {
+        System.out.println("\n" + nexus.toString() + " | has been attacked!");
+    }
+
+    public static void viewItemsCopy() {
+        System.out.println("\n\n[1] " + Item.THORN_MAIL.toString() +
+                "\n[2] " + Item.ROD_OF_AGES.toString() +
+                "\n[3] " + Item.INFINITY_EDGE.toString() +
+                "\n[4] " + Item.RABADONS_DEATHCAP.toString() +
+                "\n");
+    }
+
+    public static void victoryCopy() {
+        System.out.println(
+                "\n\n🔻 The Enemy Nexus has been destroyed! 🔻\n\n");
+
+        System.out.println(
+                "\n\n"
+                        + "\n      💎💎💎💎💎"
+                        + "\n    💎💎💎💎💎💎💎"
+                        + "\n  💎💎💎💎💎💎💎💎💎"
+                        + "\n 💎💎💎        💎💎💎"
+                        + "\n💎💎🏆 VICTORY! 🏆💎💎"
+                        + "\n 💎💎💎        💎💎💎"
+                        + "\n  💎💎💎💎💎💎💎💎💎"
+                        + "\n    💎💎💎💎💎💎💎"
+                        + "\n      💎💎💎💎💎"
+                        + "\n\n");
     }
 }
