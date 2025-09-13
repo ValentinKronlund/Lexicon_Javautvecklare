@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import helpers.Helpers;
+import summonersTerminal.gameHelpers.Copy;
 
 public class SummonersTerminalGame {
     Scanner scanner = new Scanner(System.in);
@@ -26,26 +27,11 @@ public class SummonersTerminalGame {
     }
 
     private boolean InitiateGame() {
-        System.out.println("\n🔮 Welcome, to Summoner's Terminal! 🔮");
-        System.out.println(
-                "\n[ Rules ]: \n"
-                        + "   Your aim is to destroy the enemy nexus 🔻, while protecting your own 💎\n"
-                        + "   To attack a nexus, a champion must first break through the enemies minions\n\n"
-                        + "   Minions spawn in waves at the start of each combat sequence\n"
-                        + "   A minion wave consists of 2 melee minions with 90hp, and 3 caster minions with 70hp\n"
-                        + "   Every three waves, a canon minion with 220hp will be added to the wave\n"
-                        + "   Minions award gold when killed, which can be used to purchase items between combat sequences\n");
-        System.out.println("\n🔮 Minions spawning soon! 🔮\n");
+        Copy.initialCopy();
 
         while (playerChampion == null) {
 
             try {
-                System.out.println(
-                        "\n👤 Choose your champion: 👤\n\n"
-                                + "(G)aren\n"
-                                + "(K)atarina\n"
-                                + "(V)eigar\n");
-
                 String championRequest = helper.askLine(scanner, "");
 
                 switch (championRequest) {
@@ -74,32 +60,25 @@ public class SummonersTerminalGame {
 
         this.enemyChampion = new Champion("Lux", ChampionClass.MAGE);
 
-        System.out.println(
-                "\nChampions selected!\n\n"
-                        + "Player Champion 😎" + "\n" + this.playerChampion.toString() + "\n\n"
-                        + "Enemy Champion 😈" + "\n" + this.enemyChampion.toString() + "\n");
-
-        System.out.println("\n\n🔮 Minions have spawned! 🔮");
+        Copy.championsSelectedCopy(playerChampion, enemyChampion);
         return true;
     }
 
     private boolean GameLoop() {
         while (true) {
-            if (playerChampion.getIsDead()) {
-                System.out.println("\nYou have respawned! 🩵\n");
+            if (playerChampion.getIsDead() == true) {
+                playerChampion.respawn();
             }
 
-            System.out.println("\nNew wave incoming!");
-            System.out.println("Wave number: " + waveNumber + "\n");
+            Copy.newWaveCopy(waveNumber);
             int playerActionCount = 0;
-            boolean inBase = false;
 
             generateMinionWave();
-            printWave();
+            Copy.waveCopy(minionWave);
+            playerChampion.walkFromBase();
 
-            while (playerActionCount < 5) {
-                inBase = false;
-                printBaseActionChoice(playerActionCount);
+            while (playerActionCount < 5 & playerChampion.getIsDead() == false) {
+                Copy.baseActionChoiceCopy(playerActionCount);
                 try {
                     char playerChoice = helper.askChar(scanner, "");
                     switch (playerChoice) {
@@ -118,7 +97,6 @@ public class SummonersTerminalGame {
 
                         case 'b': {
                             playerChampion.goToBase();
-                            inBase = true;
                             playerActionCount += 2;
                             break;
                         }
@@ -133,7 +111,6 @@ public class SummonersTerminalGame {
                         case 'p': {
                             purchaseOptions(playerChampion);
                             playerActionCount += 2;
-                            inBase = true;
                             break;
                         }
 
@@ -148,7 +125,7 @@ public class SummonersTerminalGame {
                         }
 
                         case 'w': {
-                            printWave();
+                            Copy.waveCopy(minionWave);
                             continue;
                         }
 
@@ -176,7 +153,7 @@ public class SummonersTerminalGame {
                     continue;
                 }
 
-                if (inBase == false) {
+                if (playerChampion.getInBase() == false) {
                     for (Minion minion : minionWave) {
                         playerChampion.takeDamage(minion.attack(), playerActionCount);
                     }
@@ -192,7 +169,7 @@ public class SummonersTerminalGame {
     // Action helpers below 👇🏽 --------------------
     private boolean attackAction() {
         while (true) {
-            printAttackActionChoice();
+            Copy.attackActionChoiceCopy(minionWave);
             int targetIdx = helper.askInt(scanner, "");
             try {
                 if (minionWave.get(targetIdx - 1) == null) {
@@ -212,7 +189,7 @@ public class SummonersTerminalGame {
 
     private boolean abilityAction() {
         while (true) {
-            printAttackActionChoice();
+            Copy.attackActionChoiceCopy(minionWave);
             int targetIdx = helper.askInt(scanner, "");
             try {
                 if (targetIdx > minionWave.size() | targetIdx < 1) {
@@ -292,40 +269,6 @@ public class SummonersTerminalGame {
             }
 
         }
-
-    }
-
-    // Print helpers below 👇🏽 ---------------------
-    private void printWave() {
-        System.out.println("\n♦️♦️♦️♦️♦️");
-        for (Minion minion : minionWave) {
-            System.out.println(minion.toString());
-        }
-        System.out.println("\n♦️♦️♦️♦️♦️");
-    }
-
-    private void printBaseActionChoice(int playerActionCount) {
-        System.out.println("\n\nAction count: " + playerActionCount + "\n");
-        System.out.println(
-                "\nWhat would you like to do?\n"
-                        + "a: Use your ability!\n"
-                        + "m: Melee attack!\n"
-                        + "g: Go to base.\n"
-                        + "i: View available items.\n"
-                        + "p: Purchase an item.\n"
-                        + "s: Display your stats.\n"
-                        + "e: Display enemy stats.\n"
-                        + "w: Display minion wave.\n"
-                        + "q: Quit the game\n");
-    }
-
-    private void printAttackActionChoice() {
-        System.out.println("\nWhat target would you like to attack?\n");
-        System.out.println("🗡️ 🗡️ 🗡️ 🗡️ 🗡️");
-        for (int i = 0; i < minionWave.size(); i++) {
-            System.out.println("[" + (i + 1) + "] " + minionWave.get(i));
-        }
-        System.out.println("🗡️ 🗡️ 🗡️ 🗡️ 🗡️");
 
     }
 

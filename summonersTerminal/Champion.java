@@ -11,6 +11,7 @@ public class Champion {
     private int level = 1;
     private int gold = 500;
     private boolean isDead = false;
+    private boolean inBase = false;
 
     private final List<Item> items = new ArrayList<>();
 
@@ -58,6 +59,10 @@ public class Champion {
 
     // Actions below 👇🏽 ----------
     public boolean equip(Item item) {
+        if (items.size() >= 6) {
+            System.out.println("\nYou don't have any more available item slots!");
+            return false;
+        }
         if (this.gold < item.cost()) {
             System.out.println("\nNot enough gold for that item!");
             return false;
@@ -65,8 +70,7 @@ public class Champion {
         this.gold -= item.cost();
         items.add(item);
         System.out.println("\nYou purchased " + item.toString() + "\n");
-        recalcAllStats();
-        return true;
+        return goToBase();
     }
 
     public boolean unequip(Item item) {
@@ -129,16 +133,28 @@ public class Champion {
     }
 
     public boolean goToBase() {
+        this.inBase = true;
+        System.out.println("\nYou have gone to the base -- HP and Mana reset!✨\n");
         recalcAllStats();
+        this.inBase = false;
         return true;
     }
 
     public boolean onDeath(int playerActionCount) {
         System.out.println("You have been slain! 😵");
         this.isDead = true;
+        this.inBase = true;
         playerActionCount = 5;
         recalcAllStats();
+        respawn();
         return true;
+    }
+
+    public boolean respawn() {
+        this.isDead = false;
+        this.inBase = false;
+        System.out.println("\nYou have respawned! 🩵\n");
+        return isDead;
     }
 
     public boolean takeDamage(int damageAmount, int playerActionCount) {
@@ -181,11 +197,18 @@ public class Champion {
         return isDead;
     }
 
+    public boolean getInBase() {
+        return inBase;
+    }
+
     public List<Item> getItems() {
         return items;
     }
 
     // ----- Setters
+    public void walkFromBase() {
+        this.inBase = false;
+    }
 
     public void addGold(int amount) {
         this.gold += amount;

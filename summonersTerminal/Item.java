@@ -57,7 +57,7 @@ public enum Item {
 
         @Override
         public String toString() {
-                return name().replace('_', ' ') + " [HP+" + stats.health()
+                return "\n" + name().replace('_', ' ') + " [HP+" + stats.health()
                                 + " MP+" + stats.mana()
                                 + " ARM+" + stats.armor()
                                 + " RES+" + stats.resistance()
