@@ -11,6 +11,9 @@ public class SummonersTerminalGame {
 
     public boolean PlayGame() {
         this.gameInProgress = InitiateGame();
+        if (gameInProgress) {
+            GameLoop();
+        }
 
         return true;
     }
@@ -22,7 +25,7 @@ public class SummonersTerminalGame {
                         + "   Your aim is to destroy the enemy nexus 🔻, while protecting your own 💎\n"
                         + "   To attack a nexus, a champion must first break through the enemies minions\n\n"
                         + "   Minions spawn in waves at the start of each combat sequence\n"
-                        + "   A minion wave consists of 2 footman minions with 90hp, and 3 caster minions with 70hp\n"
+                        + "   A minion wave consists of 2 melee minions with 90hp, and 3 caster minions with 70hp\n"
                         + "   Every three waves, a canon minion with 220hp will be added to the wave\n"
                         + "   Minions award gold when killed, which can be used to purchase items between combat sequences\n");
         System.out.println("\n🔮 Minions spawning soon! 🔮\n");
@@ -67,15 +70,15 @@ public class SummonersTerminalGame {
         this.enemyChampion = new Champion("Lux", ChampionClass.MAGE);
 
         System.out.println(
-                "\nChampions selected!\n"
-                        + "Player Champion:" + "\n   " + this.playerChampion.toString() + "\n"
-                        + "Enemy Champion:" + "\n   " + this.enemyChampion.toString() + "\n");
+                "\nChampions selected!\n\n"
+                        + "Player Champion:" + "\n😎  " + this.playerChampion.toString() + "\n\n"
+                        + "Enemy Champion:" + "\n😈  " + this.enemyChampion.toString() + "\n");
 
         System.out.println("\n\n🔮 Minions have spawned! 🔮");
         return true;
     }
 
-    private void GameLoop() {
+    private boolean GameLoop() {
         while (true) {
             System.out.println(
                     "\nWhat would you like to do?\n"
@@ -85,35 +88,59 @@ public class SummonersTerminalGame {
                             + "s: Display your stats.\n"
                             + "e: Display enemy stats.\n"
                             + "q: Quit the game");
-            char playerChoice = scanner.nextLine().charAt(0);
+            try {
+                char playerChoice = scanner.nextLine().charAt(0);
+                switch (playerChoice) {
+                    case 'a': {
+                        System.out
+                                .println("\nYou used your ability, causing: " + playerChampion.ability() + " damage!");
+                        break;
+                    }
 
-            switch (playerChoice) {
-                case 'a':
-                    System.out.println("\nYou used your ability, causing: " + playerChampion.ability() + " damage!");
-                    break;
-                case 'm':
-                    System.out.println("\nYou attacked, causing: " + playerChampion.attack() + " damage!");
-                    break;
-                case 'p':
-                    playerChampion.equip(Item.INFINITY_EDGE);
-                    System.out.println("\nYou purchased an item!");
-                    break;
-                case 's':
-                    System.out.println(playerChampion.toString());
-                    break;
-                case 'e':
-                    System.out.println(enemyChampion.toString());
-                    break;
-                case 'q':
-                    System.out.println(
-                            "\nYou are about to quit the game 😵"
-                                    + "\nAre you sure you want to leave and lose 25 LP?"
-                                    + "\nYou'll be stuck in elo hell");
-                    char quitConfirmation = scanner.nextLine().charAt(0);
+                    case 'm': {
+                        System.out.println("\nYou attacked, causing: " + playerChampion.attack() + " damage!");
+                        break;
+                    }
 
-                default:
-                    throw new AssertionError("There is currently no command for: " + playerChoice);
+                    case 'p': {
+                        playerChampion.equip(Item.INFINITY_EDGE);
+                        System.out.println("\nYou purchased an item!");
+                        break;
+                    }
+
+                    case 's': {
+                        System.out.println("\n" + playerChampion.toString());
+                        break;
+                    }
+
+                    case 'e': {
+                        System.out.println("\n" + enemyChampion.toString());
+                        break;
+                    }
+
+                    case 'q': {
+                        System.out.println(
+                                "\nYou are about to quit the game 😵"
+                                        + "\nAre you sure you want to leave and lose 25 LP?"
+                                        + "\nYou'll be stuck in elo hell!"
+                                        + "\n\nType 'q' if you want to quit");
+                        char quitConfirmation = scanner.nextLine().charAt(0);
+                        switch (quitConfirmation) {
+                            case 'q':
+                                return false;
+                            default:
+                                continue;
+                        }
+                    }
+
+                    default:
+                        throw new AssertionError("There is currently no command for: " + playerChoice);
+                }
+            } catch (AssertionError err) {
+                System.out.println(err);
+                continue;
             }
+
         }
     }
 
