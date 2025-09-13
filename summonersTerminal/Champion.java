@@ -19,10 +19,10 @@ public class Champion {
         this.championName = championName;
         this.championClass = championClass;
 
-        Stats d = championClass.base();
+        Stats base = championClass.base();
         this.stats = new Stats(
-                d.health(), d.mana(), d.armor(), d.resistance(),
-                d.attackPower(), d.abilityPower());
+                base.health(), base.mana(), base.armor(), base.resistance(),
+                base.attackPower(), base.abilityPower());
     }
 
     public void levelUp() {

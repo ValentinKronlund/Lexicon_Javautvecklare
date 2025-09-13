@@ -1,65 +1,66 @@
 package summonersTerminal;
 
-public enum Minion {
-        MELEE(
-                        new Stats(
-                                        90,
-                                        0,
-                                        10,
-                                        0,
-                                        17,
-                                        0),
-                        new Stats(
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0)),
-        CASTER(
-                        new Stats(
-                                        70,
-                                        0,
-                                        0,
-                                        0,
-                                        13,
-                                        0),
-                        new Stats(
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0)),
-        CANON(
-                        new Stats(
-                                        220,
-                                        0,
-                                        25,
-                                        10,
-                                        25,
-                                        0),
-                        new Stats(
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0));
+import java.util.List;
 
-        private final Stats base, growthPerCycle;
+public class Minion {
+    String minionName;
+    MinionType minionType;
+    private Stats stats;
+    private int goldValue;
 
-        Minion(Stats base, Stats growthPerCycle) {
-                this.base = base;
-                this.growthPerCycle = growthPerCycle;
+    public Minion(
+            MinionType minionType) {
+        this.minionName = minionType.nameType();
+        this.minionType = minionType;
+        this.goldValue = minionType.goldValue();
+
+        Stats base = minionType.base();
+        this.stats = new Stats(
+                base.health(),
+                base.mana(),
+                base.armor(),
+                base.resistance(),
+                base.abilityPower(),
+                base.abilityPower());
+    }
+
+    public void onDeath(
+            List<Minion> wave,
+            Champion champion) {
+        System.out.println(
+                "\nMinion has died!\n"
+                        + champion.championName + " has been awarded with "
+                        + goldValue + " gold!");
+        wave.remove(this);
+        champion.addGold(goldValue);
+    }
+
+    public int attack() {
+        return this.stats.attackPower();
+    }
+
+    public boolean takeDamage(int damageAmount, List<Minion> wave, Champion champion) {
+        try {
+            this.stats = new Stats(
+                    stats.health() - damageAmount,
+                    stats.mana(),
+                    stats.armor(),
+                    stats.resistance(),
+                    stats.abilityPower(),
+                    stats.abilityPower());
+
+            if (this.stats.health() <= 0) {
+                onDeath(wave, champion);
+            }
+            return true;
+        } catch (Exception e) {
+            System.out.println("Some spooky shit happened when minion tried to take damage 👻");
+            return false;
         }
+    }
 
-        public Stats base() {
-                return base;
-        }
-
-        public Stats growthPerCycle() {
-                return growthPerCycle;
-        }
-
+    @Override
+    public String toString() {
+        return "%s HP:%d | Gold Value: %d".formatted(minionName, stats.health(), goldValue);
+    }
 }
