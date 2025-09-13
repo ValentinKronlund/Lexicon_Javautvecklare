@@ -5,7 +5,7 @@ public enum ChampionClass {
                         new Stats(
                                         700,
                                         200,
-                                        40,
+                                        25,
                                         30,
                                         45,
                                         0),
@@ -21,7 +21,7 @@ public enum ChampionClass {
                         new Stats(
                                         450,
                                         500,
-                                        25,
+                                        10,
                                         30,
                                         20,
                                         50),
@@ -36,7 +36,7 @@ public enum ChampionClass {
                         new Stats(
                                         500,
                                         300,
-                                        30,
+                                        10,
                                         20,
                                         60,
                                         10),

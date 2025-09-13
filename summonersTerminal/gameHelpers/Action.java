@@ -1,11 +1,83 @@
 package summonersTerminal.gameHelpers;
 
 import helpers.Helpers;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import summonersTerminal.Champion;
 import summonersTerminal.Item;
+import summonersTerminal.Minion;
+import summonersTerminal.MinionType;
 
 public class Action {
-    Helpers helper = new Helpers();
+    static Helpers helper = new Helpers();
+    static Scanner scanner = new Scanner(System.in);
+
+    public static void generateMinionWave(List<Minion> minionWave, int waveNumber) {
+        List<Minion> wave = new ArrayList<>();
+
+        for (int i = 0; i < 2; i++) { // Add Melee minions
+            Minion newMinion = new Minion(MinionType.MELEE);
+            wave.add(newMinion);
+        }
+        for (int i = 0; i < 3; i++) { // Add Caster minions
+            Minion newMinion = new Minion(MinionType.CASTER);
+            wave.add(newMinion);
+        }
+
+        if (waveNumber % 3 == 0) {
+            Minion newMinion = new Minion(MinionType.CANON);
+            wave.add(newMinion);
+        }
+
+        for (Minion minion : wave) {
+            minionWave.add(minion);
+        }
+    }
+
+    public static boolean attackAction(Champion playerChampion, List<Minion> minionWave) {
+        while (true) {
+            Copy.attackActionChoiceCopy(minionWave);
+            int targetIdx = helper.askInt(scanner, "");
+            try {
+                if (minionWave.get(targetIdx - 1) == null) {
+                    System.out.println("No minion at given index: " + targetIdx);
+                    continue;
+                }
+
+                Minion targetMinion = minionWave.get(targetIdx - 1);
+                boolean successfulAttack = playerChampion.attack(targetMinion, minionWave);
+                return successfulAttack;
+            } catch (IllegalArgumentException e) {
+                System.out.println("No minion at given index: " + targetIdx);
+                continue;
+            }
+        }
+    }
+
+    public static boolean abilityAction(Champion playerChampion, List<Minion> minionWave) {
+        while (true) {
+            Copy.attackActionChoiceCopy(minionWave);
+            int targetIdx = helper.askInt(scanner, "");
+            try {
+                if (targetIdx > minionWave.size() | targetIdx < 1) {
+                    System.out.println("There is no minion at that location -- Try again");
+                    continue;
+                }
+                if (minionWave.get(targetIdx - 1) == null) {
+                    System.out.println("No minion at given index: " + targetIdx);
+                    continue;
+                }
+
+                Minion targetMinion = minionWave.get(targetIdx - 1);
+                boolean successfulAttack = playerChampion.ability(targetMinion, minionWave);
+                return successfulAttack;
+            } catch (IllegalArgumentException e) {
+                System.out.println("No minion at given index: " + targetIdx);
+                continue;
+            }
+        }
+    }
 
     public static void purchaseOptions(Champion champion) {
         while (true) {

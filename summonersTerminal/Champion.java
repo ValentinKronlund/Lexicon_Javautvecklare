@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import summonersTerminal.gameHelpers.Abilities;
+import summonersTerminal.gameHelpers.Damage;
+
 public class Champion {
     String championName;
     ChampionClass championClass;
@@ -89,47 +92,7 @@ public class Champion {
     }
 
     public boolean ability(Minion target, List<Minion> minionWave) {
-        if (championName.equals("Katarina")) {
-            int damage = (int) Math.round((this.stats.attackPower() * 0.4) + (this.stats.abilityPower()));
-            int manaCost = 125;
-            List<Minion> aoeTargets = new ArrayList<>();
-            int targetIdx = minionWave.indexOf(target);
-
-            if (this.stats.mana() >= manaCost) {
-                System.out.println("\nKatarina used 'Bouncing Blade' for " + manaCost + " mana");
-                aoeTargets.add(target);
-
-                for (int i = 1; i <= 2; i++) {
-                    if (targetIdx > (minionWave.size() - 1) | (targetIdx + i) > (minionWave.size() - 1)) {
-                        continue;
-                    }
-
-                    if (minionWave.get(targetIdx + i) == null) {
-                        continue;
-                    }
-
-                    aoeTargets.add(minionWave.get(targetIdx + i));
-
-                }
-
-                for (Minion minion : aoeTargets) {
-                    minion.takeDamage(damage, minionWave, this);
-                }
-
-                this.stats = new Stats(
-                        this.stats.health(),
-                        this.stats.mana() - manaCost,
-                        this.stats.armor(),
-                        this.stats.resistance(),
-                        this.stats.attackPower(),
-                        this.stats.abilityPower());
-            } else if (this.stats.mana() < manaCost) {
-                System.out.println("\nNot enough mana to cast that spell!");
-                return false;
-            }
-            return true;
-        }
-        return target.takeDamage(this.stats.abilityPower(), minionWave, this);
+        return Abilities.ability(this, championName, target, minionWave);
     }
 
     public boolean goToBase() {
@@ -158,16 +121,17 @@ public class Champion {
     }
 
     public boolean takeDamage(int damageAmount, int playerActionCount) {
+        int damageTaken = (int) Math.round(Damage.damageAfterArmor(damageAmount, stats.armor()));
         try {
             this.stats = new Stats(
-                    stats.health() - damageAmount,
+                    stats.health() - damageTaken,
                     stats.mana(),
                     stats.armor(),
                     stats.resistance(),
                     stats.attackPower(),
                     stats.abilityPower());
 
-            System.out.println("You have taken " + damageAmount + " damage!" + " | HP: " + this.stats.health());
+            System.out.println("You have taken " + damageTaken + " damage!" + " | HP: " + this.stats.health());
 
             if (this.stats.health() <= 0) {
                 onDeath(playerActionCount);
@@ -208,6 +172,16 @@ public class Champion {
     // ----- Setters
     public void walkFromBase() {
         this.inBase = false;
+    }
+
+    public void useMana(int manaCost) {
+        this.stats = new Stats(
+                stats.health(),
+                stats.mana() - manaCost,
+                stats.armor(),
+                stats.resistance(),
+                stats.attackPower(),
+                stats.abilityPower());
     }
 
     public void addGold(int amount) {

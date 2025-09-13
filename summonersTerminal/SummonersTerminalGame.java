@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import helpers.Helpers;
+import summonersTerminal.gameHelpers.Action;
 import summonersTerminal.gameHelpers.Copy;
 
 public class SummonersTerminalGame {
@@ -73,24 +74,27 @@ public class SummonersTerminalGame {
             Copy.newWaveCopy(waveNumber);
             int playerActionCount = 0;
 
-            generateMinionWave();
+            Action.generateMinionWave(minionWave, waveNumber);
             Copy.waveCopy(minionWave);
             playerChampion.walkFromBase();
 
             while (playerActionCount < 5 & playerChampion.getIsDead() == false) {
                 Copy.baseActionChoiceCopy(playerActionCount);
+
                 try {
                     char playerChoice = helper.askChar(scanner, "");
+
+                    // Main combat choices below 👇🏽 -------------------------
                     switch (playerChoice) {
                         case 'a': {
-                            boolean successfulAttack = abilityAction();
+                            boolean successfulAttack = Action.abilityAction(playerChampion, minionWave);
                             if (successfulAttack)
                                 playerActionCount++;
                             break;
                         }
 
                         case 'm': {
-                            attackAction();
+                            Action.attackAction(playerChampion, minionWave);
                             playerActionCount++;
                             break;
                         }
@@ -106,27 +110,27 @@ public class SummonersTerminalGame {
                                     "\n[2] " + Item.ROD_OF_AGES.toString() +
                                     "\n[3] " + Item.INFINITY_EDGE.toString() +
                                     "\n[4] " + Item.RABADONS_DEATHCAP.toString());
-                            continue;
+                            continue; // <----- Continue here as to not lose a round or take damage.
                         }
                         case 'p': {
-                            purchaseOptions(playerChampion);
+                            Action.purchaseOptions(playerChampion);
                             playerActionCount += 2;
                             break;
                         }
 
                         case 's': {
                             System.out.println("\n" + playerChampion.toString());
-                            continue;
+                            continue; // <----- Continue here as to not lose a round or take damage.
                         }
 
                         case 'e': {
                             System.out.println("\n" + enemyChampion.toString());
-                            continue;
+                            continue; // <----- Continue here as to not lose a round or take damage.
                         }
 
                         case 'w': {
                             Copy.waveCopy(minionWave);
-                            continue;
+                            continue; // <----- Continue here as to not lose a round or take damage.
                         }
 
                         case 'q': {
@@ -164,112 +168,6 @@ public class SummonersTerminalGame {
             waveNumber++;
 
         }
-    }
-
-    // Action helpers below 👇🏽 --------------------
-    private boolean attackAction() {
-        while (true) {
-            Copy.attackActionChoiceCopy(minionWave);
-            int targetIdx = helper.askInt(scanner, "");
-            try {
-                if (minionWave.get(targetIdx - 1) == null) {
-                    System.out.println("No minion at given index: " + targetIdx);
-                    continue;
-                }
-
-                Minion targetMinion = minionWave.get(targetIdx - 1);
-                boolean successfulAttack = playerChampion.attack(targetMinion, minionWave);
-                return successfulAttack;
-            } catch (IllegalArgumentException e) {
-                System.out.println("No minion at given index: " + targetIdx);
-                continue;
-            }
-        }
-    }
-
-    private boolean abilityAction() {
-        while (true) {
-            Copy.attackActionChoiceCopy(minionWave);
-            int targetIdx = helper.askInt(scanner, "");
-            try {
-                if (targetIdx > minionWave.size() | targetIdx < 1) {
-                    System.out.println("There is no minion at that location -- Try again");
-                    continue;
-                }
-                if (minionWave.get(targetIdx - 1) == null) {
-                    System.out.println("No minion at given index: " + targetIdx);
-                    continue;
-                }
-
-                Minion targetMinion = minionWave.get(targetIdx - 1);
-                boolean successfulAttack = playerChampion.ability(targetMinion, minionWave);
-                return successfulAttack;
-            } catch (IllegalArgumentException e) {
-                System.out.println("No minion at given index: " + targetIdx);
-                continue;
-            }
-        }
-    }
-
-    private void generateMinionWave() {
-        List<Minion> wave = new ArrayList<>();
-
-        for (int i = 0; i < 2; i++) { // Add Melee minions
-            Minion newMinion = new Minion(MinionType.MELEE);
-            wave.add(newMinion);
-        }
-        for (int i = 0; i < 3; i++) { // Add Caster minions
-            Minion newMinion = new Minion(MinionType.CASTER);
-            wave.add(newMinion);
-        }
-
-        if (waveNumber % 3 == 0) {
-            Minion newMinion = new Minion(MinionType.CANON);
-            wave.add(newMinion);
-        }
-
-        for (Minion minion : wave) {
-            this.minionWave.add(minion);
-        }
-    }
-
-    private void purchaseOptions(Champion champion) {
-        while (true) {
-            int option = helper.askInt(scanner,
-                    "\nWhat item would you like to purchase?"
-                            + "\n[1] " + Item.THORN_MAIL.toString() +
-                            "\n[2] " + Item.ROD_OF_AGES.toString() +
-                            "\n[3] " + Item.INFINITY_EDGE.toString() +
-                            "\n[4] " + Item.RABADONS_DEATHCAP.toString());
-
-            switch (option) {
-                case 1: {
-                    champion.equip(Item.THORN_MAIL);
-                    return;
-                }
-                case 2: {
-
-                    champion.equip(Item.ROD_OF_AGES);
-                    return;
-                }
-                case 3: {
-
-                    champion.equip(Item.INFINITY_EDGE);
-                    return;
-                }
-                case 4: {
-
-                    champion.equip(Item.RABADONS_DEATHCAP);
-                    return;
-                }
-                default: {
-                    System.out.println("There is no item at the given index of: " + option);
-                    continue;
-                }
-            }
-
-        }
-
     }
 
 }
