@@ -1,3 +1,10 @@
 {
-	"terminal.integrated.fontSize": 14
+	"terminal.integrated.fontSize": 14,
+	"[java]": {
+		"editor.defaultFormatter": "redhat.java",
+		"editor.formatOnSave": true
+	},
+	"editor.codeActionsOnSave": {
+		"source.organizeImports": "explicit"
+	}
 }
