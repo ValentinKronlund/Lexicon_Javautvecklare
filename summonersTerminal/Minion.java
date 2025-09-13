@@ -20,7 +20,7 @@ public class Minion {
                 base.mana(),
                 base.armor(),
                 base.resistance(),
-                base.abilityPower(),
+                base.attackPower(),
                 base.abilityPower());
     }
 
@@ -28,8 +28,8 @@ public class Minion {
             List<Minion> wave,
             Champion champion) {
         System.out.println(
-                "\nMinion has died!\n"
-                        + champion.championName + " has been awarded with "
+                "Minion has died!\n"
+                        + champion.championName + " has been awarded with 🥇"
                         + goldValue + " gold!");
         wave.remove(this);
         champion.addGold(goldValue);
@@ -46,12 +46,16 @@ public class Minion {
                     stats.mana(),
                     stats.armor(),
                     stats.resistance(),
-                    stats.abilityPower(),
+                    stats.attackPower(),
                     stats.abilityPower());
+
+            System.out.println(this.minionName + " Minion has taken " + damageAmount + " damage!" + " | HP: "
+                    + this.stats.health());
 
             if (this.stats.health() <= 0) {
                 onDeath(wave, champion);
             }
+
             return true;
         } catch (Exception e) {
             System.out.println("Some spooky shit happened when minion tried to take damage 👻");

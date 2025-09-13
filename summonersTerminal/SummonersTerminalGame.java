@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import helpers.Helpers;
+
 public class SummonersTerminalGame {
     Scanner scanner = new Scanner(System.in);
+    Helpers helper = new Helpers();
 
     public boolean gameInProgress;
     private Champion playerChampion;
@@ -34,18 +37,16 @@ public class SummonersTerminalGame {
                         + "   Minions award gold when killed, which can be used to purchase items between combat sequences\n");
         System.out.println("\n🔮 Minions spawning soon! 🔮\n");
 
-        System.out.println(playerChampion);
-
         while (playerChampion == null) {
 
             try {
                 System.out.println(
-                        "\n👤 Choose your champion: 👤\n"
+                        "\n👤 Choose your champion: 👤\n\n"
                                 + "(G)aren\n"
                                 + "(K)atarina\n"
                                 + "(V)eigar\n");
 
-                String championRequest = scanner.nextLine();
+                String championRequest = helper.askLine(scanner, "");
 
                 switch (championRequest) {
                     case "Garen", "garen", "G", "g": {
@@ -75,8 +76,8 @@ public class SummonersTerminalGame {
 
         System.out.println(
                 "\nChampions selected!\n\n"
-                        + "Player Champion:" + "\n😎  " + this.playerChampion.toString() + "\n\n"
-                        + "Enemy Champion:" + "\n😈  " + this.enemyChampion.toString() + "\n");
+                        + "Player Champion 😎" + "\n" + this.playerChampion.toString() + "\n\n"
+                        + "Enemy Champion 😈" + "\n" + this.enemyChampion.toString() + "\n");
 
         System.out.println("\n\n🔮 Minions have spawned! 🔮");
         return true;
@@ -84,23 +85,28 @@ public class SummonersTerminalGame {
 
     private boolean GameLoop() {
         while (true) {
+            if (playerChampion.getIsDead()) {
+                System.out.println("\nYou have respawned! 🩵\n");
+            }
+
             System.out.println("\nNew wave incoming!");
             System.out.println("Wave number: " + waveNumber + "\n");
             int playerActionCount = 0;
+            boolean inBase = false;
 
             generateMinionWave();
             printWave();
 
             while (playerActionCount < 5) {
+                inBase = false;
                 printBaseActionChoice(playerActionCount);
                 try {
-                    char playerChoice = scanner.nextLine().charAt(0);
+                    char playerChoice = helper.askChar(scanner, "");
                     switch (playerChoice) {
                         case 'a': {
-                            System.out
-                                    .println("\nYou used your ability, causing: " + playerChampion.ability()
-                                            + " damage!");
-                            playerActionCount++;
+                            boolean successfulAttack = abilityAction();
+                            if (successfulAttack)
+                                playerActionCount++;
                             break;
                         }
 
@@ -110,26 +116,40 @@ public class SummonersTerminalGame {
                             break;
                         }
 
-                        case 'p': {
-                            playerChampion.equip(Item.INFINITY_EDGE);
-                            System.out.println("\nYou purchased an item!");
+                        case 'b': {
+                            playerChampion.goToBase();
+                            inBase = true;
                             playerActionCount += 2;
+                            break;
+                        }
+
+                        case 'i': {
+                            System.out.println("\n[1] " + Item.THORN_MAIL.toString() +
+                                    "\n[2] " + Item.ROD_OF_AGES.toString() +
+                                    "\n[3] " + Item.INFINITY_EDGE.toString() +
+                                    "\n[4] " + Item.RABADONS_DEATHCAP.toString());
+                            continue;
+                        }
+                        case 'p': {
+                            purchaseOptions(playerChampion);
+                            playerActionCount += 2;
+                            inBase = true;
                             break;
                         }
 
                         case 's': {
                             System.out.println("\n" + playerChampion.toString());
-                            break;
+                            continue;
                         }
 
                         case 'e': {
                             System.out.println("\n" + enemyChampion.toString());
-                            break;
+                            continue;
                         }
 
                         case 'w': {
                             printWave();
-                            break;
+                            continue;
                         }
 
                         case 'q': {
@@ -138,7 +158,7 @@ public class SummonersTerminalGame {
                                             + "\nAre you sure you want to leave and lose 25 LP?"
                                             + "\nYou'll be stuck in elo hell!"
                                             + "\n\nType 'q' if you want to quit");
-                            char quitConfirmation = scanner.nextLine().charAt(0);
+                            char quitConfirmation = helper.askChar(scanner, "");
                             switch (quitConfirmation) {
                                 case 'q':
                                     return false;
@@ -148,11 +168,18 @@ public class SummonersTerminalGame {
                         }
 
                         default:
-                            throw new AssertionError("There is currently no command for: " + playerChoice);
+                            System.out.println("There is currently no command for: " + playerChoice);
+                            continue;
                     }
                 } catch (AssertionError err) {
                     System.out.println(err);
                     continue;
+                }
+
+                if (inBase == false) {
+                    for (Minion minion : minionWave) {
+                        playerChampion.takeDamage(minion.attack(), playerActionCount);
+                    }
                 }
 
             }
@@ -164,27 +191,44 @@ public class SummonersTerminalGame {
 
     // Action helpers below 👇🏽 --------------------
     private boolean attackAction() {
-        printAttackActionChoice();
-        int playerChoice = scanner.nextInt();
-        scanner.nextLine(); // <-- Scanner bug fix, removes trailing white space
-
         while (true) {
+            printAttackActionChoice();
+            int targetIdx = helper.askInt(scanner, "");
             try {
-                if (minionWave.get(playerChoice - 1) == null) {
-                    throw new IllegalArgumentException();
+                if (minionWave.get(targetIdx - 1) == null) {
+                    System.out.println("No minion at given index: " + targetIdx);
+                    continue;
                 }
 
-                Minion targetMinion = minionWave.get(playerChoice - 1);
-                boolean successfulAttack = targetMinion.takeDamage(playerChampion.attack(), minionWave, playerChampion);
-                if (successfulAttack) {
-                    System.out.println("\nYou attacked, causing: " + playerChampion.attack() +
-                            " damage to the minion!");
-                    System.out.println(targetMinion.toString());
-                }
-
-                return true;
+                Minion targetMinion = minionWave.get(targetIdx - 1);
+                boolean successfulAttack = playerChampion.attack(targetMinion, minionWave);
+                return successfulAttack;
             } catch (IllegalArgumentException e) {
-                System.out.println("No minion at given index: " + playerChoice);
+                System.out.println("No minion at given index: " + targetIdx);
+                continue;
+            }
+        }
+    }
+
+    private boolean abilityAction() {
+        while (true) {
+            printAttackActionChoice();
+            int targetIdx = helper.askInt(scanner, "");
+            try {
+                if (targetIdx > minionWave.size() | targetIdx < 1) {
+                    System.out.println("There is no minion at that location -- Try again");
+                    continue;
+                }
+                if (minionWave.get(targetIdx - 1) == null) {
+                    System.out.println("No minion at given index: " + targetIdx);
+                    continue;
+                }
+
+                Minion targetMinion = minionWave.get(targetIdx - 1);
+                boolean successfulAttack = playerChampion.ability(targetMinion, minionWave);
+                return successfulAttack;
+            } catch (IllegalArgumentException e) {
+                System.out.println("No minion at given index: " + targetIdx);
                 continue;
             }
         }
@@ -212,13 +256,52 @@ public class SummonersTerminalGame {
         }
     }
 
+    private void purchaseOptions(Champion champion) {
+        while (true) {
+            int option = helper.askInt(scanner,
+                    "\nWhat item would you like to purchase?"
+                            + "\n[1] " + Item.THORN_MAIL.toString() +
+                            "\n[2] " + Item.ROD_OF_AGES.toString() +
+                            "\n[3] " + Item.INFINITY_EDGE.toString() +
+                            "\n[4] " + Item.RABADONS_DEATHCAP.toString());
+
+            switch (option) {
+                case 1: {
+                    champion.equip(Item.THORN_MAIL);
+                    return;
+                }
+                case 2: {
+
+                    champion.equip(Item.ROD_OF_AGES);
+                    return;
+                }
+                case 3: {
+
+                    champion.equip(Item.INFINITY_EDGE);
+                    return;
+                }
+                case 4: {
+
+                    champion.equip(Item.RABADONS_DEATHCAP);
+                    return;
+                }
+                default: {
+                    System.out.println("There is no item at the given index of: " + option);
+                    continue;
+                }
+            }
+
+        }
+
+    }
+
     // Print helpers below 👇🏽 ---------------------
     private void printWave() {
-        System.out.println("\n-----------------------------");
+        System.out.println("\n♦️♦️♦️♦️♦️");
         for (Minion minion : minionWave) {
             System.out.println(minion.toString());
         }
-        System.out.println("\n-----------------------------");
+        System.out.println("\n♦️♦️♦️♦️♦️");
     }
 
     private void printBaseActionChoice(int playerActionCount) {
@@ -227,18 +310,23 @@ public class SummonersTerminalGame {
                 "\nWhat would you like to do?\n"
                         + "a: Use your ability!\n"
                         + "m: Melee attack!\n"
+                        + "g: Go to base.\n"
+                        + "i: View available items.\n"
                         + "p: Purchase an item.\n"
                         + "s: Display your stats.\n"
                         + "e: Display enemy stats.\n"
                         + "w: Display minion wave.\n"
-                        + "q: Quit the game");
+                        + "q: Quit the game\n");
     }
 
     private void printAttackActionChoice() {
         System.out.println("\nWhat target would you like to attack?\n");
+        System.out.println("🗡️ 🗡️ 🗡️ 🗡️ 🗡️");
         for (int i = 0; i < minionWave.size(); i++) {
             System.out.println("[" + (i + 1) + "] " + minionWave.get(i));
         }
+        System.out.println("🗡️ 🗡️ 🗡️ 🗡️ 🗡️");
+
     }
 
 }
